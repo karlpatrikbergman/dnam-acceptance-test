@@ -1,0 +1,14 @@
+[
+  {
+    "ipAddress": "172.25.0.101",
+    "port": 80,
+    "userName": "root",
+    "password": ""
+  },
+  {
+    "ipAddress": "172.25.0.102",
+    "port": 0,
+    "userName": "root",
+    "password": ""
+  }
+]

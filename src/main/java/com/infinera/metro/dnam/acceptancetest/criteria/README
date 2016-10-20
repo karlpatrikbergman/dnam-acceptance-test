@@ -1,0 +1,7 @@
+From Continuous Delivery chapter 8:
+    "With a well-designed application driver layer, it becomes possible to
+     completely dispense with the acceptance criteria layer and express the
+     acceptance criteria in the implementation of the test."
+
+I will try to go with this approach to begin with, and skip acceptance criteria layer
+(and also Cucumber and the likes).

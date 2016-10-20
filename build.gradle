@@ -1,0 +1,77 @@
+group 'com.infinera.metro.dnam.test.acceptance'
+version currentVersion
+
+buildscript {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.4.7'
+    }
+}
+
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+apply plugin: 'docker'
+apply plugin: 'spring-boot'
+apply plugin: 'java'
+
+compileJava {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+/** Test settings **/
+test {
+    //Show that tests are run in the command-line output
+    testLogging {
+        events 'started', 'passed'
+    }
+}
+
+/** Docker settings **/
+task buildDocker(type: Docker, dependsOn: build) {
+//    push = true
+    applicationName = project.name
+    dockerfile = file('src/main/docker/Dockerfile')
+    addFile('src/main/docker/entrypoint.sh', '/entrypoint.sh')
+    addFile('src/main/docker/wait-for-it.sh', '/wait-for-it.sh')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
+
+artifactory {
+    resolve {
+        contextUrl = "${artifactory_contextUrl}" //The base Artifactory URL for the resolver
+        repository {
+            repoKey = 'repo' //The Artifactory (preferably virtual) repository key to resolve from
+        }
+    }
+}
+
+/** Repositories settings **/
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-test")
+    compile("org.projectlombok:lombok:1.16.10")
+    compile("org.apache.httpcomponents:httpclient:4.5.2")
+
+    compile("se.transmode.tnm:rmiclient_if:27.3.0")
+}

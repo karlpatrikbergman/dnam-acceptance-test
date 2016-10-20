@@ -1,0 +1,9 @@
+Scenario: An operator shall be able to add a Node to the DNA-M application
+
+Given there is a running node accessible at "172.21.0.4:80" with
+login credentials user = root and password = ""
+
+When I add a node to the DNA-M application
+
+Then the DNA-M application shall store the node, connect to it and begin to poll for
+Node alarms, events [... to be continued]
