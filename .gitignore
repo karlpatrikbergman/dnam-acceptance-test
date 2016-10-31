@@ -70,4 +70,3 @@ crashlytics.properties
 crashlytics-build.properties
 
 gradle/
-src/test/java/se/infinera/metro/microservice/alarm/MySketchBoard.java

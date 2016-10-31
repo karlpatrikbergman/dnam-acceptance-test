@@ -26,7 +26,7 @@ public class AppConfig {
     @Bean
     public RmiServiceFactory rmiServiceFactory() {
         RmiServiceFactory.RmiConfig rmiConfig = new RmiServiceFactory.RmiConfig();
-        rmiConfig.setHostname("localhost");
+        rmiConfig.setHostname("172.35.0.3");
         rmiConfig.setRmiPort(1099);
         return new RmiServiceFactory(rmiConfig);
     }

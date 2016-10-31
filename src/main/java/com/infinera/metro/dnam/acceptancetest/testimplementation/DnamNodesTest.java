@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.transmode.tnm.rmiclient.server.services.discovery.NodeEntry;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(classes = AppConfig.class)
 public class DnamNodesTest {
 
-    private static final String NODE_IP_ADDRESS = "172.25.0.101";
+    private static final String NODE_IP_ADDRESS = "172.35.0.101";
 
     @Autowired
     private NodeService nodeService;
@@ -40,5 +41,14 @@ public class DnamNodesTest {
         assertEquals(NODE_IP_ADDRESS, nodeEntry.getUserRef());
 
         log.info("SUCCESS");
+    }
+
+    private void printEnvironmentVariables() {
+        Map<String, String> env = System.getenv();
+        for (String envName : env.keySet()) {
+            System.out.format("%s=%s%n",
+                    envName,
+                    env.get(envName));
+        }
     }
 }
