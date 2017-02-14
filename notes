@@ -1,0 +1,2 @@
+Log in on to db running in container:
+$ mysql --host= 172.35.0.103 --port=3306 -uroot -proot tnmdb

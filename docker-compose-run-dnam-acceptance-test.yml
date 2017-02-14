@@ -1,0 +1,14 @@
+version: "2"
+services:
+  dnam-acceptance-test:
+    image: localhost:5000/dnam-acceptance-test:latest
+    container_name: dnam-acceptance-test
+    networks:
+      dnam_network:
+    depends_on:
+      - dnam-mainserver
+      - nodes_setup
+    links:
+        - dnam-mainserver
+    entrypoint: ./wait-for-it.sh
+    command: 172.35.0.100:1099 --timeout=120 --strict -- ./entrypoint.sh

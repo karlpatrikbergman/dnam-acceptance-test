@@ -1,0 +1,63 @@
+version: "2"
+services:
+  dnam-mainserver:
+    image: se-artif-prd.infinera.com/enlighten/tnmserver:latest
+    container_name: dnam-mainserver
+    environment:
+      - "JAVA_OPTS=-Drest.server.enabled=true -Ddb.host=tnmdb -Damqp.host=rabbitmq"
+    networks:
+      dnam_network:
+        ipv4_address: 172.35.0.100
+    depends_on:
+      - tnmdb
+      - rabbitmq
+    links:
+      - tnmdb
+      - rabbitmq
+  tnmdb:
+    image: mariadb:10.1
+    container_name: tnmdb
+    networks:
+        dnam_network:
+           ipv4_address: 172.35.0.103
+    environment:
+      MYSQL_USER: tnmuser
+      MYSQL_PASSWORD: d4NaZ9j3k
+      MYSQL_DATABASE: tnmdb
+      MYSQL_ROOT_PASSWORD: root
+  rabbitmq:
+    image: se-artif-prd.infinera.com/enlighten/rabbitmq:latest
+    container_name: rabbitmq
+    networks:
+      dnam_network:
+  node1:
+    image: se-artif-prd.infinera.com/tm3k/trunk-hostenv:28.1
+    container_name: node1
+    privileged: true
+    networks:
+      dnam_network:
+        ipv4_address: 172.35.0.101
+  node2:
+    image: se-artif-prd.infinera.com/tm3k/trunk-hostenv:28.1
+    container_name: node2
+    privileged: true
+    networks:
+      dnam_network:
+        ipv4_address: 172.35.0.102
+  nodes_setup:
+    build: nodes_setup
+    container_name: nodes_setup
+    depends_on:
+      - node1
+      - node2
+    links:
+      - node1
+      - node2
+    networks:
+      dnam_network:
+networks:
+  dnam_network:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.35.0.0/24 # Allows for 255 addresses

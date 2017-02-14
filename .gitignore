@@ -70,3 +70,5 @@ crashlytics.properties
 crashlytics-build.properties
 
 gradle/
+!/delete-when-certain/
+/delete-when-certain/

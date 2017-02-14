@@ -1,0 +1,5 @@
+version: "2"
+services:
+  dnam-acceptance-test:
+    image: localhost:5000/dnam-acceptance-test:latest
+    build: .
