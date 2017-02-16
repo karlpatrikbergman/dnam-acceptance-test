@@ -50,21 +50,10 @@ public class NodeService {
     }
 
     public void addNode(String nodeIp) throws RemoteException {
-        log.debug("\n ############ About to checkSession");
+        log.debug("Adding node with ip {}", nodeIp);
         checkSession();
         NodeEntry nodeEntry = getNodeEntry(nodeIp, new ArrayList<>());
         session.process(NodesDiscoveryRequest.add(nodeEntry));
-        log.debug("\n\nAfter session.process\n\n");
-    }
-
-    private void checkSession() {
-        log.debug("\n ############ In checkSession");
-        if(session == null) {
-            log.debug("\n ############ Rmi session was null, create a new one");
-            createSession();
-            boolean sessionIsNull = (session == null) ? true : false;
-            log.debug("\n ############ After createSession method call, sessionIsNull " + sessionIsNull);
-        }
     }
 
     public NodeEntry getNode(String nodeIp) throws RemoteException {
@@ -73,22 +62,28 @@ public class NodeService {
                 .getNodeEntry();
     }
 
-//    public void deleteNode(String nodeIp) throws RemoteException {
-//        NodeEntry nodeEntry = getNodeEntry(nodeIp, new ArrayList<>());
-//        session.process(NodesDiscoveryRequest.deleteNode(nodeEntry));
-//    }
+    private void checkSession() {
+        if(session == null) {
+            log.debug("Rmi session was null, try to create one...");
+            createSession();
+            log.debug("Created rmi session");
+        }
+    }
 
     @PostConstruct
     public void createSession() {
-        log.debug("\n ############ In createSession");
+        log.debug("Creating rmi session");
         final Server server = rmiServiceFactory.lookupRemoteService(Server.class, ServerDefs.SERVER_RMI_NAME);
-        try {
-            this.session = server.createSession(ServerSessionType.WEBAPP);
-            log.debug("\n ############ Created rmi session");
-            boolean sessionIsNull = (session == null) ? true : false;
-            log.debug("\n ############ In createSession after creating session, sessionIsNull " + sessionIsNull);
-        } catch (RemoteException e) {
-            log.error("\n ############ Failed to create rmi session {}", e.getMessage(), e);
+        while(session == null) {
+            try {
+                this.session = server.createSession(ServerSessionType.WEBAPP);
+                if(session == null) {
+                    log.debug("Failed to create rmi session {}, sleeping for 5 seconds");
+                    Thread.sleep(5000);
+                }
+            } catch (RemoteException | InterruptedException e) {
+                log.error("Failed to create rmi session {}", e.getMessage(), e);
+            }
         }
     }
 

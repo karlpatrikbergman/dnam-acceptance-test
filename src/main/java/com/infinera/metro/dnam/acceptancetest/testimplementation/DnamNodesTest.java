@@ -8,9 +8,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.transmode.tnm.rmiclient.server.services.discovery.NodeEntry;
 
 import java.rmi.RemoteException;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *  This class would belong to middle layer, "Test Implementation Layer"
@@ -33,13 +37,13 @@ public class DnamNodesTest {
         nodeService.addNode(NODE_IP_ADDRESS);
 
         //When
-//        log.info("Asserting node with ip {} was added", NODE_IP_ADDRESS);
-//        NodeEntry nodeEntry = nodeService.getNode(NODE_IP_ADDRESS);
+        log.info("Asserting node with ip {} was added", NODE_IP_ADDRESS);
+        NodeEntry nodeEntry = nodeService.getNode(NODE_IP_ADDRESS);
 
         //Then
-//        assertNotNull(nodeEntry);
-//        assertEquals(NODE_IP_ADDRESS, nodeEntry.getUserRef());
-//        log.info("SUCCESS");
+        assertNotNull(nodeEntry);
+        assertEquals(NODE_IP_ADDRESS, nodeEntry.getUserRef());
+        log.info("SUCCESS");
     }
 
     private void printEnvironmentVariables() {
